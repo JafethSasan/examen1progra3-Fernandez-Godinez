@@ -6,51 +6,113 @@
 
 ```text
 Caso asignado:
-Integrante 1:
-Integrante 2:
-URL del repositorio:
+Integrante 1: Jafeth Godinez Matarrita
+Integrante 2: Jorge Fernandez Miranda
+URL del repositorio: https://github.com/JafethSasan/examen1progra3-Fernandez-Godinez
 ```
 
 ## 9.2 Descripción del problema
 
 **Problema que se desea resolver:**
 
-<texto>
+El problema que se desea resolver con el programa es la falta de un sistema centralizado para administrar
+y controlar los préstamos de equipos tecnológicos, permitiendo llevar un registro organizado de los solicitantes,
+los equipos disponibles y los préstamos realizados.
 
 **Quién utilizaría el sistema:**
 
-<texto>
+El sistema sería utilizado principalmente por dos tipos de usuarios:
+1. Estudiantes: podrán solicitar el préstamo de equipos tecnológicos para realizar actividades académicas,
+   siempre respetando el límite establecido de un máximo de dos préstamos activos simultáneamente.
+3. Funcionarios: podrán solicitar el préstamo de equipos tecnológicos para realizar sus labores institucionales,
+   con un límite de cuatro préstamos activos simultáneamente.
 
 **Principales operaciones:**
 
-- <operación>
-
+Las principales funciones del sistema son las siguientes:
+1. Gestión de solicitantes: registrar, consultar, listar y actualizar la información de los estudiantes y funcionarios que solicitan equipos tecnológicos.
+2. Gestión de equipos tecnológicos: registrar nuevos equipos, consultar sus características, listar los equipos disponibles y actualizar su información o estado.
+3. Registro de préstamos: registrar el préstamo de un equipo a un solicitante, verificando que el solicitante exista, que el equipo esté disponible y que se cumplan las reglas establecidas.
+4. Control de préstamos activos: consultar los préstamos que todavía no han sido devueltos, incluyendo la información del solicitante y del equipo correspondiente.
+5. Gestión de devoluciones: registrar la devolución de un equipo, actualizar la fecha de devolución real y cambiar el estado del préstamo y del equipo.
+6. Validación de reglas de negocio: impedir préstamos de equipos no disponibles, evitar registros duplicados y controlar la cantidad máxima de préstamos activos según el tipo de solicitante.
+7. Persistencia de la información: almacenar y consultar los datos mediante una base de datos MySQL, utilizando Java y JDBC para realizar las operaciones.
+   
 ## 9.3 Requerimientos funcionales
 
-```text
-RF-01.
-RF-02.
-RF-03.
-RF-04.
-RF-05.
-RF-06.
-RF-07.
-RF-08.
-```
+RF01. Registro de solicitantes: el sistema debe permitir registrar solicitantes, incluyendo su identificación, nombre, correo electrónico y tipo de solicitante (estudiante o funcionario).
+RF02. Consulta de solicitantes: el sistema debe permitir buscar un solicitante por su identificación y consultar su información registrada.
+RF03. Listado de solicitantes: el sistema debe permitir visualizar la lista de solicitantes registrados.
+RF04. Actualización de solicitantes: el sistema debe permitir modificar la información de los solicitantes existentes.
+RF05. Registro de equipos: el sistema debe permitir registrar equipos tecnológicos, incluyendo su código, descripción, tipo y estado.
+RF06. Consulta y listado de equipos: el sistema debe permitir consultar un equipo por su código y visualizar los equipos registrados, incluyendo aquellos que estén disponibles, prestados o en reparación.
+RF07. Actualización de equipos: el sistema debe permitir modificar la información de los equipos y actualizar su estado.
+RF08. Registro de préstamos: el sistema debe permitir registrar préstamos de equipos a solicitantes existentes, indicando la fecha del préstamo y la fecha esperada de devolución.
+RF09. Validación de disponibilidad: antes de registrar un préstamo, el sistema debe verificar que el equipo exista y se encuentre disponible.
+RF10. Control del límite de préstamos: el sistema debe impedir que un solicitante supere la cantidad máxima de préstamos activos permitida: dos para estudiantes y cuatro para funcionarios.
+RF11. Validación de fechas: el sistema debe comprobar que la fecha esperada de devolución sea posterior a la fecha del préstamo y cumpla con las validaciones temporales definidas para la operación.
+RF12. Consulta de préstamos activos: el sistema debe permitir consultar los préstamos que un solicitante mantiene activos, mostrando la información correspondiente al equipo prestado.
+RF13. Registro de devoluciones: el sistema debe permitir registrar la devolución de un equipo, guardar la fecha real de devolución y actualizar el estado del préstamo a DEVUELTO.
+RF14. Actualización de disponibilidad: al registrar correctamente una devolución, el sistema debe cambiar el estado del equipo a DISPONIBLE.
+RF15. Prevención de registros duplicados: el sistema debe impedir el registro de solicitantes con identificaciones existentes y de equipos con códigos duplicados.
+RF16. Persistencia de datos: el sistema debe almacenar y recuperar la información de solicitantes, equipos y préstamos mediante una base de datos MySQL.
+RF17. Manejo de errores y validaciones: el sistema debe informar cuando una operación no pueda completarse por datos inválidos, registros inexistentes, falta de disponibilidad o incumplimiento de las reglas de negocio.
 
 ## 9.4 Reglas de negocio
 
-| ID | Regla | Operación donde se aplica | Qué ocurre si se viola |
-|---|---|---|---|
-| RN-01 | | | |
-| RN-02 | | | |
-| RN-03 | | | |
+Solicitantes
+ID	    Regla	                                                Operaciones donde se aplica	                        Si se viola
+RN-01	Identificación, nombre y correo son obligatorios
+        (se les hace trim)	                                    Registrar y actualizar solicitante	                ValidacionException: “El campo ‘X’ es obligatorio.”
+RN-02	El correo debe tener formato válido
+        (texto@dominio.ext, sin espacios)	                    Registrar y actualizar solicitante	                ValidacionException: “El correo electrónico no tiene un formato válido.”
+RN-03	El tipo es obligatorio: ESTUDIANTE o FUNCIONARIO	    Registrar y actualizar solicitante	                ValidacionException: “Debe seleccionar ESTUDIANTE o FUNCIONARIO.”
+RN-04	La identificación es única	                            Registrar solicitante	                            ValidacionException: “Ya existe un solicitante con esa identificación.” Si algo se escapa, el error 1062 de MySQL                                                                                                                      se traduce a DatosException
+RN-05	El solicitante debe existir                             Actualizar solicitante, registrar préstamo,
+                                                                consultar préstamos activos	                        ValidacionException: “No existe el solicitante indicado.” (o “...con esa identificación.”)
 
+Equipos
+ID	    Regla	                                                Operaciones donde se aplica	                         Si se viola
+RN-06	Código, descripción y tipo son obligatorios.
+        Si el estado viene vacío, se asigna DISPONIBLE	        Registrar y actualizar equipo	                     ValidacionException: “El campo ‘X’ es obligatorio.”
+RN-07	El código es único                                    	Registrar equipo	                                 ValidacionException: “Ya existe un equipo con ese código.” (con respaldo del error 1062)
+RN-08	Un equipo nuevo no puede registrarse como PRESTADO    	Registrar equipo	                                 ValidacionException: “Un equipo nuevo no puede registrarse como PRESTADO...”
+RN-09	El equipo debe existir                                 	Actualizar equipo, cambiar estado,
+                                                                registrar préstamo	                                 ValidacionException: “No existe un equipo con ese código.” (o “...el equipo indicado.”)
+RN-10	PRESTADO solo lo asigna el préstamo, nunca a mano	    Actualizar equipo (si pasa de otro estado
+                                                                a PRESTADO) y cambiar estado (cualquier intento)	 ValidacionException: “El estado PRESTADO solo se asigna al registrar un préstamo.”
+RN-11	Un equipo prestado no puede cambiar
+        de estado manualmente; primero se devuelve	            Actualizar equipo y cambiar estado	                 ValidacionException: “No se puede cambiar manualmente el estado de un equipo prestado; registre su devolución.”
+RN-12	Al cambiar estado, el estado debe ser válido (no nulo)	Cambiar estado	                                     ValidacionException: “Debe seleccionar un estado válido.”
+
+Préstamos
+ID	    Regla	                                                Operaciones donde se aplica	                         Si se viola
+RN-13	Identificación del solicitante, código del equipo
+        y fecha esperada son obligatorios	                    Registrar préstamo	                                 ValidacionException (“El campo ‘...’ es obligatorio.” / “Debe indicar la fecha de devolución esperada.”)
+RN-14	La fecha esperada de devolución debe ser
+        posterior a hoy	                                        Registrar préstamo	                                 ValidacionException: “La fecha esperada de devolución debe ser posterior a hoy (fecha).”
+RN-15	Solo se presta un equipo en estado DISPONIBLE	        Registrar préstamo. Se verifica en el servicio
+                                                                y de nuevo en el repositorio, dentro de la 
+                                                                transacción (SELECT ... FOR UPDATE + UPDATE
+                                                                ... WHERE estado='DISPONIBLE')	                      EquipoNoDisponibleException: “El equipo está en estado X y no se puede prestar.” o “El equipo dejó de estar                                                                                                                            disponible durante el registro.” (esta segunda hace rollback)
+RN-16	Límite de préstamos activos: estudiante 2,
+        funcionario 4	                                        Registrar préstamo	                                  LimitePrestamosException: “El solicitante ya alcanzó el límite de N préstamos activos.”
+RN-17	El registro es atómico: se inserta el préstamo
+        (ACTIVO, fecha de préstamo = hoy) y el equipo pasa
+        a PRESTADO en una sola transacción	                    Registrar préstamo	                                  Si falla cualquier paso, se hace rollback y no queda nada a medias
+RN-18	El número de préstamo debe ser mayor que 0 y existir	Devolver y consultar préstamo por número	          ValidacionException: “El número de préstamo debe ser mayor que cero.” / “No existe el préstamo indicado.”
+RN-19	Solo se puede devolver un préstamo ACTIVO
+        (no se devuelve dos veces)	                            Devolver préstamo. El repositorio lo vuelve
+                                                                a verificar con FOR UPDATE	                          ValidacionException: “El préstamo ya fue devuelto.” (en el repositorio, IllegalArgumentException con el mismo                                                                                                                          mensaje)
+RN-20	La devolución es automatica: préstamo a
+        DEVUELTO con fecha real = hoy, y equipo a DISPONIBLE	Devolver préstamo	                                  Si falla cualquier paso, rollback
+RN-21	La identificación o el código son obligatorios al
+        consultar	                                            Consultar solicitante, consultar equipo, consultar
+                                                                préstamos activos	                                  ValidacionException: “El campo ‘...’ es obligatorio.”
 ## 9.5 Entidades, atributos y relaciones
 
 | Clase | Responsabilidad | Atributos principales |
-|---|---|---|
-| | | |
+
 
 | Clases relacionadas | Tipo de relación | Multiplicidad | Explicación |
 |---|---|---|---|
