@@ -315,8 +315,6 @@ cotejado con los archivos fuente.
 
 ## Distribución del trabajo
 
-Completar esta tabla con los aportes reales de cada integrante y
-respaldarlos mediante el historial de commits del repositorio.
 
   -----------------------------------------------------------------------
   Integrante                          Aportes principales
