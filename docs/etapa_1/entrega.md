@@ -20,7 +20,7 @@
  
 | Campo | Detalle |
 |---|---|
-| **Caso asignado** | _Pendiente de completar_ |
+| **Caso asignado** | Caso 1 |
 | **Integrante 1** | Jafeth Godinez Matarrita |
 | **Integrante 2** | Jorge Fernandez Miranda |
 | **Repositorio** | <https://github.com/JafethSasan/examen1progra3-Fernandez-Godinez> |
