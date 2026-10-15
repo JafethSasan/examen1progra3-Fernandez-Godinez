@@ -111,20 +111,23 @@ RN-21	La identificación o el código son obligatorios al
                                                                 préstamos activos	                                  ValidacionException: “El campo ‘...’ es obligatorio.”
 ## 9.5 Entidades, atributos y relaciones
 
-| Clase | Responsabilidad | Atributos principales |
-
-
-| Clases relacionadas | Tipo de relación | Multiplicidad | Explicación |
-|---|---|---|---|
-| | | | |
-
-**Enumeraciones:**
-
-```java
-public enum <Nombre> {
-    // valores
-}
-```
+Entidades
+Clase	Responsabilidad	Atributos principales
+Solicitante	Representa a la persona que pide equipos prestados. Su tipo define el límite de préstamos activos (2 o 4).	identificacion (String, clave), nombre (String), correo (String), tipo (TipoSolicitante)
+Equipo	Representa un equipo tecnológico del inventario y su estado actual.	codigo (String, clave), descripcion (String), tipo (String, texto libre), estado (EstadoEquipo)
+Prestamo	Registra que un solicitante tiene un equipo durante un periodo, y si ya fue devuelto. Es la entidad que une a las otras dos.	id (int, generado por la BD), solicitante (Solicitante), equipo (Equipo), fechaPrestamo (LocalDate), fechaDevolucionEsperada (LocalDate), fechaDevolucionReal (LocalDate, nulo mientras esté activo), estado (EstadoPrestamo)
+Enumeraciones
+Enum	Valores	Lo usa
+TipoSolicitante	ESTUDIANTE, FUNCIONARIO	Solicitante.tipo
+EstadoEquipo	DISPONIBLE, PRESTADO, EN_REPARACION	Equipo.estado
+EstadoPrestamo	ACTIVO, DEVUELTO	Prestamo.estado
+Relaciones entre entidades
+Desde	Hacia	Tipo	Multiplicidad	Explicación
+Prestamo	Solicitante	Asociación unidireccional	Un préstamo tiene 1 solicitante. Un solicitante puede tener 0..* préstamos.	Cada préstamo pertenece a una persona. En el código solo Prestamo guarda la referencia; Solicitante no tiene lista de préstamos. En la BD es la columna solicitante_id, que apunta a solicitante.identificacion.
+Prestamo	Equipo	Asociación unidireccional	Un préstamo se refiere a 1 equipo. Un equipo puede aparecer en 0..* préstamos a lo largo del tiempo, pero en a lo sumo 1 préstamo ACTIVO a la vez.	Cada préstamo es de un solo equipo. En la BD es equipo_codigo, que apunta a equipo.codigo. El “máximo uno activo” no lo impone la estructura sino la regla de negocio: solo se presta un equipo DISPONIBLE y al prestarlo pasa a PRESTADO (RN-15 y RN-17).
+Solicitante	TipoSolicitante	Asociación con enumeración	1 a 1	Cada solicitante tiene exactamente un tipo, y de él depende el límite de préstamos (RN-16).
+Equipo	EstadoEquipo	Asociación con enumeración	1 a 1	Cada equipo tiene exactamente un estado, que determina si se puede prestar.
+Prestamo	EstadoPrestamo	Asociación con enumeración	1 a 1	Cada préstamo está ACTIVO o DEVUELTO. Cuando está DEVUELTO, fechaDevolucionReal tiene valor.
 
 ## 9.6 Diagrama de clases UML
 
