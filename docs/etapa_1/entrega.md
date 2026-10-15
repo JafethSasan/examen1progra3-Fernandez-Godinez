@@ -82,6 +82,27 @@ RN-02 | 	El correo debe tener formato válido (texto@dominio.ext, sin espacios) 
 RN-03 | 	El tipo es obligatorio: ESTUDIANTE o FUNCIONARIO | 	Registrar y actualizar solicitante	 | ValidacionException: “Debe seleccionar ESTUDIANTE o FUNCIONARIO.”
 RN-04 | 	La identificación es única | 	Registrar solicitante	 | ValidacionException: “Ya existe un solicitante con esa identificación.” Si algo se escapa, el error 1062 de MySQL se traduce a DatosException
 RN-05 | 	El solicitante debe existir | 	Actualizar solicitante, registrar préstamo, consultar préstamos activos	 | ValidacionException: “No existe el solicitante indicado.” (o “...con esa identificación.”)
+Equipos
+ID	Regla	Operaciones donde se aplica	Si se viola
+RN-06	Código, descripción y tipo son obligatorios. Si el estado viene vacío, se asigna DISPONIBLE	Registrar y actualizar equipo	ValidacionException: “El campo ‘X’ es obligatorio.”
+RN-07	El código es único	Registrar equipo	ValidacionException: “Ya existe un equipo con ese código.” (con respaldo del error 1062)
+RN-08	Un equipo nuevo no puede registrarse como PRESTADO	Registrar equipo	ValidacionException: “Un equipo nuevo no puede registrarse como PRESTADO...”
+RN-09	El equipo debe existir	Actualizar equipo, cambiar estado, registrar préstamo	ValidacionException: “No existe un equipo con ese código.” (o “...el equipo indicado.”)
+RN-10	PRESTADO solo lo asigna el préstamo, nunca a mano	Actualizar equipo (si pasa de otro estado a PRESTADO) y cambiar estado (cualquier intento)	ValidacionException: “El estado PRESTADO solo se asigna al registrar un préstamo.”
+RN-11	Un equipo prestado no puede cambiar de estado manualmente; primero se devuelve	Actualizar equipo y cambiar estado	ValidacionException: “No se puede cambiar manualmente el estado de un equipo prestado; registre su devolución.”
+RN-12	Al cambiar estado, el estado debe ser válido (no nulo)	Cambiar estado	ValidacionException: “Debe seleccionar un estado válido.”
+Préstamos
+ID	Regla	Operaciones donde se aplica	Si se viola
+RN-13	Identificación del solicitante, código del equipo y fecha esperada son obligatorios	Registrar préstamo	ValidacionException (“El campo ‘...’ es obligatorio.” / “Debe indicar la fecha de devolución esperada.”)
+RN-14	La fecha esperada de devolución debe ser posterior a hoy	Registrar préstamo	ValidacionException: “La fecha esperada de devolución debe ser posterior a hoy (fecha).”
+RN-15	Solo se presta un equipo en estado DISPONIBLE	Registrar préstamo. Se verifica en el servicio y de nuevo en el repositorio, dentro de la transacción (SELECT ... FOR UPDATE + UPDATE ... WHERE estado='DISPONIBLE')	EquipoNoDisponibleException: “El equipo está en estado X y no se puede prestar.” o “El equipo dejó de estar disponible durante el registro.” (esta segunda hace rollback)
+RN-16	Límite de préstamos activos: estudiante 2, funcionario 4	Registrar préstamo	LimitePrestamosException: “El solicitante ya alcanzó el límite de N préstamos activos.”
+RN-17	El registro es atómico: se inserta el préstamo (ACTIVO, fecha de préstamo = hoy) y el equipo pasa a PRESTADO en una sola transacción	Registrar préstamo	Si falla cualquier paso, se hace rollback y no queda nada a medias
+RN-18	El número de préstamo debe ser mayor que 0 y existir	Devolver y consultar préstamo por número	ValidacionException: “El número de préstamo debe ser mayor que cero.” / “No existe el préstamo indicado.”
+RN-19	Solo se puede devolver un préstamo ACTIVO (no se devuelve dos veces)	Devolver préstamo. El repositorio lo vuelve a verificar con FOR UPDATE	ValidacionException: “El préstamo ya fue devuelto.” (en el repositorio, IllegalArgumentException con el mismo mensaje)
+RN-20	La devolución es atómica: préstamo a DEVUELTO con fecha real = hoy, y equipo a DISPONIBLE	Devolver préstamo	Si falla cualquier paso, rollback
+RN-21	La identificación o el código son obligatorios al consultar	Consultar solicitante, consultar equipo, consultar préstamos activos	ValidacionException: “El campo ‘...’ es obligatorio.”
+
 ## 9.5 Entidades, atributos y relaciones
 
 Entidades
@@ -129,7 +150,33 @@ Script preliminar: [`database/schema.sql`](../../database/schema.sql)
 **Interfaces Repository/DAO definidas:**
 
 ```java
-// pegue aquí una de sus interfaces
+package cr.ac.una.repository;
+
+/**
+ *
+ * @author jafet
+ */
+import cr.ac.una.model.Equipo;
+import cr.ac.una.model.EstadoEquipo;
+import java.util.List;
+import java.util.Optional;
+
+public interface EquipoRepository {
+
+    void insertar(Equipo equipo);
+
+    Optional<Equipo> buscarPorCodigo(String codigo);
+
+    List<Equipo> listar();
+
+    List<Equipo> listarDisponibles();
+
+    void actualizar(Equipo equipo);
+
+    void actualizarEstado(String codigo, EstadoEquipo estado);
+
+    boolean existeCodigo(String codigo);
+}
 ```
 
 ## Código de la Etapa 1
@@ -144,5 +191,5 @@ Script preliminar: [`database/schema.sql`](../../database/schema.sql)
 ## Distribución del trabajo
 
 | Integrante | Aportes principales |
-|---|---|
-| | |
+| Jafteh | 60% del trabajo |
+| Jorge | 40% del trabajo |
