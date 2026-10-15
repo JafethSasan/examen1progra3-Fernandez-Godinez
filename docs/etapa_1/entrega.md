@@ -77,7 +77,7 @@ Las principales funciones del sistema son las siguientes:
 ## 9.4 Reglas de negocio
 
 Solicitantes
-ID	    Regla	                                                Operaciones donde se aplica	                        Si se viola
+| ID | Regla| Operaciones donde se aplica | Si se viola | 
 RN-01	Identificación, nombre y correo son obligatorios
         (se les hace trim)	                                    Registrar y actualizar solicitante	                ValidacionException: “El campo ‘X’ es obligatorio.”
 RN-02	El correo debe tener formato válido
