@@ -40,23 +40,39 @@ Las principales funciones del sistema son las siguientes:
    
 ## 9.3 Requerimientos funcionales
 
-RF01. Registro de solicitantes: el sistema debe permitir registrar solicitantes, incluyendo su identificación, nombre, correo electrónico y tipo de solicitante (estudiante o funcionario).
-RF02. Consulta de solicitantes: el sistema debe permitir buscar un solicitante por su identificación y consultar su información registrada.
-RF03. Listado de solicitantes: el sistema debe permitir visualizar la lista de solicitantes registrados.
-RF04. Actualización de solicitantes: el sistema debe permitir modificar la información de los solicitantes existentes.
-RF05. Registro de equipos: el sistema debe permitir registrar equipos tecnológicos, incluyendo su código, descripción, tipo y estado.
-RF06. Consulta y listado de equipos: el sistema debe permitir consultar un equipo por su código y visualizar los equipos registrados, incluyendo aquellos que estén disponibles, prestados o en reparación.
-RF07. Actualización de equipos: el sistema debe permitir modificar la información de los equipos y actualizar su estado.
-RF08. Registro de préstamos: el sistema debe permitir registrar préstamos de equipos a solicitantes existentes, indicando la fecha del préstamo y la fecha esperada de devolución.
-RF09. Validación de disponibilidad: antes de registrar un préstamo, el sistema debe verificar que el equipo exista y se encuentre disponible.
-RF10. Control del límite de préstamos: el sistema debe impedir que un solicitante supere la cantidad máxima de préstamos activos permitida: dos para estudiantes y cuatro para funcionarios.
-RF11. Validación de fechas: el sistema debe comprobar que la fecha esperada de devolución sea posterior a la fecha del préstamo y cumpla con las validaciones temporales definidas para la operación.
-RF12. Consulta de préstamos activos: el sistema debe permitir consultar los préstamos que un solicitante mantiene activos, mostrando la información correspondiente al equipo prestado.
-RF13. Registro de devoluciones: el sistema debe permitir registrar la devolución de un equipo, guardar la fecha real de devolución y actualizar el estado del préstamo a DEVUELTO.
-RF14. Actualización de disponibilidad: al registrar correctamente una devolución, el sistema debe cambiar el estado del equipo a DISPONIBLE.
-RF15. Prevención de registros duplicados: el sistema debe impedir el registro de solicitantes con identificaciones existentes y de equipos con códigos duplicados.
-RF16. Persistencia de datos: el sistema debe almacenar y recuperar la información de solicitantes, equipos y préstamos mediante una base de datos MySQL.
-RF17. Manejo de errores y validaciones: el sistema debe informar cuando una operación no pueda completarse por datos inválidos, registros inexistentes, falta de disponibilidad o incumplimiento de las reglas de negocio.
+**RF01. Registro de solicitantes: el sistema debe permitir registrar solicitantes, incluyendo su identificación, nombre, correo electrónico y tipo de solicitante (estudiante o funcionario).**
+
+**RF02. Consulta de solicitantes: el sistema debe permitir buscar un solicitante por su identificación y consultar su información registrada.**
+
+**RF03. Listado de solicitantes: el sistema debe permitir visualizar la lista de solicitantes registrados.**
+
+**RF04. Actualización de solicitantes: el sistema debe permitir modificar la información de los solicitantes existentes.**
+
+**RF05. Registro de equipos: el sistema debe permitir registrar equipos tecnológicos, incluyendo su código, descripción, tipo y estado.**
+
+**RF06. Consulta y listado de equipos: el sistema debe permitir consultar un equipo por su código y visualizar los equipos registrados, incluyendo aquellos que estén disponibles, prestados o en reparación.**
+
+**RF07. Actualización de equipos: el sistema debe permitir modificar la información de los equipos y actualizar su estado.**
+
+**RF08. Registro de préstamos: el sistema debe permitir registrar préstamos de equipos a solicitantes existentes, indicando la fecha del préstamo y la fecha esperada de devolución.**
+
+**RF09. Validación de disponibilidad: antes de registrar un préstamo, el sistema debe verificar que el equipo exista y se encuentre disponible.**
+
+**RF10. Control del límite de préstamos: el sistema debe impedir que un solicitante supere la cantidad máxima de préstamos activos permitida: dos para estudiantes y cuatro para funcionarios.**
+
+**RF11. Validación de fechas: el sistema debe comprobar que la fecha esperada de devolución sea posterior a la fecha del préstamo y cumpla con las validaciones temporales definidas para la operación.**
+
+**RF12. Consulta de préstamos activos: el sistema debe permitir consultar los préstamos que un solicitante mantiene activos, mostrando la información correspondiente al equipo prestado.**
+
+**RF13. Registro de devoluciones: el sistema debe permitir registrar la devolución de un equipo, guardar la fecha real de devolución y actualizar el estado del préstamo a DEVUELTO.**
+
+**RF14. Actualización de disponibilidad: al registrar correctamente una devolución, el sistema debe cambiar el estado del equipo a DISPONIBLE.**
+
+**RF15. Prevención de registros duplicados: el sistema debe impedir el registro de solicitantes con identificaciones existentes y de equipos con códigos duplicados.**
+
+**RF16. Persistencia de datos: el sistema debe almacenar y recuperar la información de solicitantes, equipos y préstamos mediante una base de datos MySQL.**
+
+**RF17. Manejo de errores y validaciones: el sistema debe informar cuando una operación no pueda completarse por datos inválidos, registros inexistentes, falta de disponibilidad o incumplimiento de las reglas de negocio**
 
 ## 9.4 Reglas de negocio
 
