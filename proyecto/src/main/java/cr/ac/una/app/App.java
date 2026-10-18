@@ -32,21 +32,24 @@ public class App {
     private void ejecutar() {
         int opcion;
         do {
-            Consola.titulo("SISTEMA DE PRÉSTAMO DE EQUIPOS TECNOLÓGICOS");
-            System.out.println("1. Probar conexión con MySQL");
-            System.out.println("2. Gestión de solicitantes");
-            System.out.println("3. Gestión de equipos");
-            System.out.println("4. Registrar préstamo");
-            System.out.println("5. Registrar devolución");
-            System.out.println("6. Consultar préstamos activos por solicitante");
-            System.out.println("7. Listar todos los préstamos");
-            System.out.println("0. Salir");
+System.out.println("1. Probar conexión con MySQL");
+System.out.println("2. Gestión de solicitantes");
+System.out.println("3. Gestión de equipos");
+System.out.println("4. Registrar préstamo");
+System.out.println("5. Registrar devolución");
+System.out.println("6. Consultar préstamos activos por solicitante");
+System.out.println("7. Listar todos los préstamos");
+System.out.println("8. Renovar préstamo");
+System.out.println("9. Listar préstamos activos vencidos");
+System.out.println("0. Salir");
             opcion=Consola.leerEntero("Opción: ");
             try {
                 switch(opcion) {
                     case 1 -> probarConexion(); case 2 -> menuSolicitantes(); case 3 -> menuEquipos();
                     case 4 -> registrarPrestamo(); case 5 -> devolverPrestamo();
                     case 6 -> consultarActivos(); case 7 -> listarPrestamos();
+                    case 8 -> renovarPrestamo();
+                    case 9 -> listarPrestamosVencidos();
                     case 0 -> System.out.println("Fin del programa.");
                     default -> System.out.println("Opción no válida.");
                 }
@@ -65,6 +68,25 @@ public class App {
             System.out.println("Base de datos: "+con.getCatalog());
         } catch(SQLException ex) { throw new DatosException("No fue posible conectar con MySQL: "+ex.getMessage(),ex); }
     }
+    
+    private void renovarPrestamo() {
+    int id = Consola.leerEntero("Número de préstamo que desea renovar: ");
+    Prestamo p = prestamos.renovar(id);
+    System.out.println("Renovación realizada correctamente.");
+    System.out.println("Nueva fecha esperada: " + p.getFechaDevolucionEsperada());
+    System.out.println("Renovaciones utilizadas: " + p.getRenovaciones() + " de 1");
+}
+
+private void listarPrestamosVencidos() {
+    List<PrestamoVencido> lista = prestamos.listarActivosVencidos();
+    if (lista.isEmpty()) {
+        System.out.println("No hay préstamos activos vencidos.");
+    } else {
+        System.out.println("PRÉSTAMOS ACTIVOS VENCIDOS");
+        imprimir(lista);
+    }
+}
+
     private void menuSolicitantes() {
         int op; do {
             Consola.titulo("SOLICITANTES"); System.out.println("1. Registrar\n2. Consultar por identificación\n3. Listar\n4. Actualizar\n0. Volver");
