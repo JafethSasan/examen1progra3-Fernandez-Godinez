@@ -93,11 +93,11 @@ vencido; se rechaza cuando esa fecha es anterior a hoy.
 ## Defectos encontrados y corregidos
 
   ----------------------------------------------------------------------------------------------------------------------
-  ID             Defecto        Cómo se        Corrección                  Commit
+  ID             Defecto        Cómo se        Corrección                  
                                 detectó                                    
                                 (prueba)                                   
   -------------- -------------- -------------- --------------------------- ---------------------------------------------
-  D-01           La nueva regla Pruebas        Validar estado, contador    `PENDIENTE: hash o enlace del commit real.`
+  D-01           La nueva regla Pruebas        Validar estado, contador    
                  exige limitar  unitarias      `renovaciones` y fecha en   
                  cada préstamo  propuestas:    `PrestamoService`;          
                  a una sola     renovar un     persistir la renovación     
@@ -118,7 +118,7 @@ vencido; se rechaza cuando esa fecha es anterior a hoy.
                                 ejecutar las                               
                                 pruebas.                                   
 
-  D-02           La consulta de Prueba de      Incorporar el modelo de     `PENDIENTE: hash o enlace del commit real.`
+  D-02           La consulta de Prueba de      Incorporar el modelo de     
                  préstamos      consulta con   resultado `PrestamoVencido` 
                  vencidos       un préstamo    y el método de consulta en  
                  necesita       activo cuya    `PrestamoRepository` y      
