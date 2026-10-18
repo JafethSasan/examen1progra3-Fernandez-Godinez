@@ -90,9 +90,6 @@ devolución esperada actual: tres días para estudiantes y siete para
 funcionarios. Un préstamo cuya fecha esperada sea hoy no se considera
 vencido; se rechaza cuando esa fecha es anterior a hoy.
 
-**Commit:**
-`PENDIENTE: sustituir por el hash o enlace del commit real que contiene la mejora.`
-
 ## Defectos encontrados y corregidos
 
   ----------------------------------------------------------------------------------------------------------------------
